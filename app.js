@@ -27,8 +27,7 @@ const app = express();
 app.use(express.json());
 
 app.get("/", (req, res)=>{
-    res.send("Working....");
-    res.json({message: "Real Estate Apl is runnning"});
+     res.json({message: "Real Estate Apl is runnning"});
 })
 
 app.use("/api/properties", propertyRoutes);
