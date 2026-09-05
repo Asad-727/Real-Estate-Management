@@ -19,7 +19,7 @@ const getUsers = async (req, res, next) => {
 
 const createUser = async (req, res, next) => {
     try {
-        const { name, email, password } = req.body;
+        const { name, email, password, role } = req.body;
 
         if (!name || !email || !password) {
             throw new ApiError(
@@ -37,12 +37,22 @@ const createUser = async (req, res, next) => {
             );
         }
 
+        const allowedRoles = ["admin", "manager", "staff"];
+
+        if (role && !allowedRoles.includes(role)) {
+            throw new ApiError(
+                400,
+                "Invalid role"
+            );
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const user = await User.create({
             name,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            role: role || "staff"
         });
 
         const userData = user.toObject();
@@ -126,6 +136,21 @@ const updateUser = async (req, res, next) => {
                 updateData.password,
                 10
             );
+        }
+
+        if (updateData.role) {
+            const allowedRoles = [
+                "admin",
+                "manager",
+                "staff"
+            ];
+
+            if (!allowedRoles.includes(updateData.role)) {
+                throw new ApiError(
+                    400,
+                    "Invalid role"
+                );
+            }
         }
 
         const user = await User.findByIdAndUpdate(
