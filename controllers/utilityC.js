@@ -1,5 +1,5 @@
-const Utility = require("../models/utilityM.js");
-const ApiError = require("../ApiError.js");
+import Utility from "../models/utilityM.js";
+import ApiError from "../apiError.js";
 
 const getUtilities = async (req, res, next) => {
     try {
@@ -23,7 +23,12 @@ const createUtility = async (req, res, next) => {
             dueDate
         } = req.body;
 
-        if (!unit || !type || !amount || !dueDate) {
+        if (
+            !unit ||
+            !type ||
+            amount === undefined ||
+            !dueDate
+        ) {
             throw new ApiError(
                 400,
                 "Unit, type, amount and due date are required"
@@ -39,7 +44,7 @@ const createUtility = async (req, res, next) => {
 
         res.status(201).json({
             success: true,
-            message: "Utility bill created successfully",
+            message: "Utility created successfully",
             data: utility
         });
     } catch (error) {
@@ -47,7 +52,53 @@ const createUtility = async (req, res, next) => {
     }
 };
 
-module.exports = {
+const updateUtility = async (req, res, next) => {
+    try {
+        const utility = await Utility.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            {
+                new: true,
+                runValidators: true
+            }
+        );
+
+        if (!utility) {
+            throw new ApiError(404, "Utility not found");
+        }
+
+        res.json({
+            success: true,
+            message: "Utility updated successfully",
+            data: utility
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const deleteUtility = async (req, res, next) => {
+    try {
+        const utility = await Utility.findByIdAndDelete(
+            req.params.id
+        );
+
+        if (!utility) {
+            throw new ApiError(404, "Utility not found");
+        }
+
+        res.json({
+            success: true,
+            message: "Utility deleted successfully"
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export {
     getUtilities,
-    createUtility
+    createUtility,
+    updateUtility,
+    deleteUtility
 };

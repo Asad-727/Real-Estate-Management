@@ -1,13 +1,15 @@
-const express = require("express");
+import express from "express";
 
-const {
+import {
     getUsers,
     createUser,
-    loginUser
-} = require("../controllers/userC.js");
+    loginUser,
+    updateUser,
+    deleteUser
+} from "../controllers/userC.js";
 
-const authMiddleware = require("../middleware/authM.js");
-const allowRoles = require("../middleware/roleM.js");
+import authMiddleware from "../middleware/authM.js";
+import allowRoles from "../middleware/roleM.js";
 
 const router = express.Router();
 
@@ -22,4 +24,18 @@ router.get(
     getUsers
 );
 
-module.exports = router;
+router.put(
+    "/:id",
+    authMiddleware,
+    allowRoles("admin"),
+    updateUser
+);
+
+router.delete(
+    "/:id",
+    authMiddleware,
+    allowRoles("admin"),
+    deleteUser
+);
+
+export default router;

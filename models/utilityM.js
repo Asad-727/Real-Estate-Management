@@ -1,8 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const Schema = mongoose.Schema;
-
-const utilitySchema = new Schema(
+const utilitySchema = new mongoose.Schema(
     {
         unit: {
             type: mongoose.Schema.Types.ObjectId,
@@ -12,7 +10,6 @@ const utilitySchema = new Schema(
 
         type: {
             type: String,
-            enum: ["electricity", "water", "gas"],
             required: true
         },
 
@@ -39,4 +36,4 @@ const utilitySchema = new Schema(
 
 const Utility = mongoose.model("Utility", utilitySchema);
 
-module.exports = Utility;
+export default Utility;

@@ -1,14 +1,19 @@
-const express = require("express");
+import express from "express";
 
-const {
+import {
     getContracts,
-    createContract
-} = require("../controllers/contractC.js");
+    createContract,
+    updateContract,
+    deleteContract
+} from "../controllers/contractC.js";
+
+import authMiddleware from "../middleware/authM.js";
 
 const router = express.Router();
 
-router.get("/", getContracts);
+router.get("/", authMiddleware, getContracts);
+router.post("/", authMiddleware, createContract);
+router.put("/:id", authMiddleware, updateContract);
+router.delete("/:id", authMiddleware, deleteContract);
 
-router.post("/", createContract);
-
-module.exports = router;
+export default router;

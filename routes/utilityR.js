@@ -1,14 +1,19 @@
-const express = require("express");
+import express from "express";
 
-const {
+import {
     getUtilities,
-    createUtility
-} = require("../controllers/utilityC.js");
+    createUtility,
+    updateUtility,
+    deleteUtility
+} from "../controllers/utilityC.js";
+
+import authMiddleware from "../middleware/authM.js";
 
 const router = express.Router();
 
-router.get("/", getUtilities);
+router.get("/", authMiddleware, getUtilities);
+router.post("/", authMiddleware, createUtility);
+router.put("/:id", authMiddleware, updateUtility);
+router.delete("/:id", authMiddleware, deleteUtility);
 
-router.post("/", createUtility);
-
-module.exports = router;
+export default router;

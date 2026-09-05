@@ -1,12 +1,15 @@
-const jwt = require("jsonwebtoken");
-const ApiError = require("../apiError.js");
+import jwt from "jsonwebtoken";
+import ApiError from "../apiError.js";
 
 const authMiddleware = (req, res, next) => {
     try {
         const authHeader = req.headers.authorization;
 
         if (!authHeader) {
-            throw new ApiError(401, "Authorization token is required");
+            throw new ApiError(
+                401,
+                "Authorization token is required"
+            );
         }
 
         const token = authHeader.split(" ")[1];
@@ -24,8 +27,13 @@ const authMiddleware = (req, res, next) => {
 
         next();
     } catch (error) {
-        next(new ApiError(401, "Invalid or expired token"));
+        next(
+            new ApiError(
+                401,
+                "Invalid or expired token"
+            )
+        );
     }
 };
 
-module.exports = authMiddleware;
+export default authMiddleware;

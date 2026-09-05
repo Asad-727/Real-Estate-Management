@@ -1,5 +1,5 @@
-const Contract = require("../models/contractM.js");
-const ApiError = require("../apiError.js");
+import Contract from "../models/contractM.js";
+import ApiError from "../apiError.js";
 
 const getContracts = async (req, res, next) => {
     try {
@@ -17,32 +17,32 @@ const getContracts = async (req, res, next) => {
 const createContract = async (req, res, next) => {
     try {
         const {
-            tenant,
             unit,
-            monthlyRent,
+            tenant,
             startDate,
-            endDate
+            endDate,
+            monthlyRent
         } = req.body;
 
         if (
-            !tenant ||
             !unit ||
-            !monthlyRent ||
+            !tenant ||
             !startDate ||
-            !endDate
+            !endDate ||
+            monthlyRent === undefined
         ) {
             throw new ApiError(
                 400,
-                "Tenant, unit, monthly rent, start date and end date are required"
+                "Unit, tenant, start date, end date and monthly rent are required"
             );
         }
 
         const contract = await Contract.create({
-            tenant,
             unit,
-            monthlyRent,
+            tenant,
             startDate,
-            endDate
+            endDate,
+            monthlyRent
         });
 
         res.status(201).json({
@@ -55,7 +55,53 @@ const createContract = async (req, res, next) => {
     }
 };
 
-module.exports = {
+const updateContract = async (req, res, next) => {
+    try {
+        const contract = await Contract.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            {
+                new: true,
+                runValidators: true
+            }
+        );
+
+        if (!contract) {
+            throw new ApiError(404, "Contract not found");
+        }
+
+        res.json({
+            success: true,
+            message: "Contract updated successfully",
+            data: contract
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const deleteContract = async (req, res, next) => {
+    try {
+        const contract = await Contract.findByIdAndDelete(
+            req.params.id
+        );
+
+        if (!contract) {
+            throw new ApiError(404, "Contract not found");
+        }
+
+        res.json({
+            success: true,
+            message: "Contract deleted successfully"
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export {
     getContracts,
-    createContract
+    createContract,
+    updateContract,
+    deleteContract
 };

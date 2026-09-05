@@ -1,14 +1,19 @@
-const express = require("express");
+import express from "express";
 
-const {
+import {
     getRents,
-    createRent
-} = require("../controllers/rentC.js");
+    createRent,
+    updateRent,
+    deleteRent
+} from "../controllers/rentC.js";
+
+import authMiddleware from "../middleware/authM.js";
 
 const router = express.Router();
 
-router.get("/", getRents);
+router.get("/", authMiddleware, getRents);
+router.post("/", authMiddleware, createRent);
+router.put("/:id", authMiddleware, updateRent);
+router.delete("/:id", authMiddleware, deleteRent);
 
-router.post("/", createRent);
-
-module.exports = router;
+export default router;

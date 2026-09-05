@@ -1,5 +1,5 @@
-const Income = require("../models/incomeM.js");
-const ApiError = require("../apiError.js");
+import Income from "../models/incomeM.js";
+import ApiError from "../apiError.js";
 
 const getIncomes = async (req, res, next) => {
     try {
@@ -23,7 +23,12 @@ const createIncome = async (req, res, next) => {
             date
         } = req.body;
 
-        if (!title || !description || !amount || !date) {
+        if (
+            !title ||
+            !description ||
+            amount === undefined ||
+            !date
+        ) {
             throw new ApiError(
                 400,
                 "Title, description, amount and date are required"
@@ -47,7 +52,53 @@ const createIncome = async (req, res, next) => {
     }
 };
 
-module.exports = {
+const updateIncome = async (req, res, next) => {
+    try {
+        const income = await Income.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            {
+                new: true,
+                runValidators: true
+            }
+        );
+
+        if (!income) {
+            throw new ApiError(404, "Income not found");
+        }
+
+        res.json({
+            success: true,
+            message: "Income updated successfully",
+            data: income
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const deleteIncome = async (req, res, next) => {
+    try {
+        const income = await Income.findByIdAndDelete(
+            req.params.id
+        );
+
+        if (!income) {
+            throw new ApiError(404, "Income not found");
+        }
+
+        res.json({
+            success: true,
+            message: "Income deleted successfully"
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export {
     getIncomes,
-    createIncome
+    createIncome,
+    updateIncome,
+    deleteIncome
 };

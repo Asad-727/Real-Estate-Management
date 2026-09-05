@@ -1,8 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const Schema = mongoose.Schema;
-
-const paymentSchema = new Schema(
+const paymentSchema = new mongoose.Schema(
     {
         rent: {
             type: mongoose.Schema.Types.ObjectId,
@@ -27,7 +25,6 @@ const paymentSchema = new Schema(
 
         paymentMethod: {
             type: String,
-            enum: ["cash", "bank", "online"],
             required: true
         }
     },
@@ -38,4 +35,4 @@ const paymentSchema = new Schema(
 
 const Payment = mongoose.model("Payment", paymentSchema);
 
-module.exports = Payment;
+export default Payment;

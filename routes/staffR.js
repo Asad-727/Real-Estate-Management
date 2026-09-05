@@ -1,14 +1,19 @@
-const express = require("express");
+import express from "express";
 
-const {
+import {
     getStaff,
-    createStaff
-} = require("../controllers/staffC.js");
+    createStaff,
+    updateStaff,
+    deleteStaff
+} from "../controllers/staffC.js";
+
+import authMiddleware from "../middleware/authM.js";
 
 const router = express.Router();
 
-router.get("/", getStaff);
+router.get("/", authMiddleware, getStaff);
+router.post("/", authMiddleware, createStaff);
+router.put("/:id", authMiddleware, updateStaff);
+router.delete("/:id", authMiddleware, deleteStaff);
 
-router.post("/", createStaff);
-
-module.exports = router;
+export default router;

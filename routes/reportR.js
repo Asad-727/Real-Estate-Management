@@ -1,11 +1,11 @@
-const express = require("express");
+import express from "express";
 
-const {
-    getFinancialReport
-} = require("../controllers/reportC.js");
+import { getReports } from "../controllers/reportC.js";
+
+import authMiddleware from "../middleware/authM.js";
 
 const router = express.Router();
 
-router.get("/", getFinancialReport);
+router.get("/", authMiddleware, getReports);
 
-module.exports = router;
+export default router;

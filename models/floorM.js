@@ -1,17 +1,20 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const Schema = mongoose.Schema;
-
-const floorSchema = new Schema(
+const floorSchema = new mongoose.Schema(
     {
-        name: {
-            type: String,
-            required: true
-        },
-
         building: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Building",
+            required: true
+        },
+
+        floorNumber: {
+            type: Number,
+            required: true
+        },
+
+        name: {
+            type: String,
             required: true
         }
     },
@@ -22,4 +25,4 @@ const floorSchema = new Schema(
 
 const Floor = mongoose.model("Floor", floorSchema);
 
-module.exports = Floor;
+export default Floor;

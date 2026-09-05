@@ -1,4 +1,4 @@
-const ApiError = require("../apiError.js");
+import ApiError from "../apiError.js";
 
 const allowRoles = (...roles) => {
     return (req, res, next) => {
@@ -18,4 +18,4 @@ const allowRoles = (...roles) => {
     };
 };
 
-module.exports = allowRoles;
+export default allowRoles;

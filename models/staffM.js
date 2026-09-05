@@ -1,8 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const Schema = mongoose.Schema;
-
-const staffSchema = new Schema(
+const staffSchema = new mongoose.Schema(
     {
         name: {
             type: String,
@@ -36,4 +34,4 @@ const staffSchema = new Schema(
 
 const Staff = mongoose.model("Staff", staffSchema);
 
-module.exports = Staff;
+export default Staff;

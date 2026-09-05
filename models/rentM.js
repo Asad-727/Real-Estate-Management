@@ -1,8 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const Schema = mongoose.Schema;
-
-const rentSchema = new Schema(
+const rentSchema = new mongoose.Schema(
     {
         contract: {
             type: mongoose.Schema.Types.ObjectId,
@@ -38,4 +36,4 @@ const rentSchema = new Schema(
 
 const Rent = mongoose.model("Rent", rentSchema);
 
-module.exports = Rent;
+export default Rent;

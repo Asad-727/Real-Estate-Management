@@ -1,5 +1,5 @@
-const Tenant = require("../models/tenantM.js");
-const ApiError = require("../ApiError.js");
+import Tenant from "../models/tenantM.js";
+import ApiError from "../apiError.js";
 
 const getTenants = async (req, res, next) => {
     try {
@@ -16,12 +16,12 @@ const getTenants = async (req, res, next) => {
 
 const createTenant = async (req, res, next) => {
     try {
-        const { name, email, phone, unit } = req.body;
+        const { name, email, phone, cnic } = req.body;
 
-        if (!name || !email || !phone || !unit) {
+        if (!name || !email || !phone || !cnic) {
             throw new ApiError(
                 400,
-                "Name, email, phone and unit are required"
+                "Name, email, phone and cnic are required"
             );
         }
 
@@ -29,7 +29,7 @@ const createTenant = async (req, res, next) => {
             name,
             email,
             phone,
-            unit
+            cnic
         });
 
         res.status(201).json({
@@ -42,7 +42,51 @@ const createTenant = async (req, res, next) => {
     }
 };
 
-module.exports = {
+const updateTenant = async (req, res, next) => {
+    try {
+        const tenant = await Tenant.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            {
+                new: true,
+                runValidators: true
+            }
+        );
+
+        if (!tenant) {
+            throw new ApiError(404, "Tenant not found");
+        }
+
+        res.json({
+            success: true,
+            message: "Tenant updated successfully",
+            data: tenant
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const deleteTenant = async (req, res, next) => {
+    try {
+        const tenant = await Tenant.findByIdAndDelete(req.params.id);
+
+        if (!tenant) {
+            throw new ApiError(404, "Tenant not found");
+        }
+
+        res.json({
+            success: true,
+            message: "Tenant deleted successfully"
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export {
     getTenants,
-    createTenant
+    createTenant,
+    updateTenant,
+    deleteTenant
 };

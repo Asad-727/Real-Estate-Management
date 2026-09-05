@@ -1,16 +1,19 @@
-const express = require("express");
+import express from "express";
 
-const {
+import {
     getFloors,
-    createFloor
-} = require("../controllers/floorC.js");
+    createFloor,
+    updateFloor,
+    deleteFloor
+} from "../controllers/floorC.js";
 
-const authMiddleware = require("../middleware/authM.js");
+import authMiddleware from "../middleware/authM.js";
 
 const router = express.Router();
 
 router.get("/", authMiddleware, getFloors);
-
 router.post("/", authMiddleware, createFloor);
+router.put("/:id", authMiddleware, updateFloor);
+router.delete("/:id", authMiddleware, deleteFloor);
 
-module.exports = router;
+export default router;

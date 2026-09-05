@@ -1,8 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const Schema = mongoose.Schema;
-
-const tenantSchema = new Schema(
+const tenantSchema = new mongoose.Schema(
     {
         name: {
             type: String,
@@ -19,9 +17,8 @@ const tenantSchema = new Schema(
             required: true
         },
 
-        unit: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Unit",
+        cnic: {
+            type: String,
             required: true
         }
     },
@@ -32,4 +29,4 @@ const tenantSchema = new Schema(
 
 const Tenant = mongoose.model("Tenant", tenantSchema);
 
-module.exports = Tenant;
+export default Tenant;

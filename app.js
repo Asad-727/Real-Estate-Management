@@ -1,37 +1,38 @@
-const express = require("express");
+import express from "express";
 
+import errorHandler from "./errorHandler.js";
 
-const errorHandler = require("./errorHandler");
-const propertyRoutes = require("./routes/propertyR.js")
-const buildingRoutes = require("./routes/buildingR.js");
-const floorRoutes = require("./routes/floorR.js");
-const unitRoutes = require("./routes/unitR.js");
-const tenantRoutes = require("./routes/tenantR.js");
-const contractRoutes = require("./routes/contractR.js");
-const rentRoutes = require("./routes/rentR.js");
-const paymentRoutes = require("./routes/paymentR.js");
-const utilityRoutes = require("./routes/utilityR.js");
-const maintenanceRoutes = require("./routes/maintenanceR.js");
-const staffRoutes = require("./routes/staffR.js");
-const expenseRoutes = require("./routes/expenseR.js");
-const incomeRoutes = require("./routes/incomeR.js");
-const reportRoutes = require("./routes/reportR.js");
-const notificationRoutes = require("./routes/notificationR.js");
-const invoiceRoutes = require("./routes/invoiceR.js");
-const userRoutes = require("./routes/userR.js");
-
-const authMiddleware = require("./middleware/authM.js");
+import propertyRoutes from "./routes/propertyR.js";
+import buildingRoutes from "./routes/buildingR.js";
+import floorRoutes from "./routes/floorR.js";
+import unitRoutes from "./routes/unitR.js";
+import tenantRoutes from "./routes/tenantR.js";
+import contractRoutes from "./routes/contractR.js";
+import rentRoutes from "./routes/rentR.js";
+import paymentRoutes from "./routes/paymentR.js";
+import utilityRoutes from "./routes/utilityR.js";
+import maintenanceRoutes from "./routes/maintenanceR.js";
+import staffRoutes from "./routes/staffR.js";
+import expenseRoutes from "./routes/expenseR.js";
+import incomeRoutes from "./routes/incomeR.js";
+import reportRoutes from "./routes/reportR.js";
+import notificationRoutes from "./routes/notificationR.js";
+import invoiceRoutes from "./routes/invoiceR.js";
+import userRoutes from "./routes/userR.js";
 
 const app = express();
 
 app.use(express.json());
 
-app.get("/", (req, res)=>{
-     res.json({message: "Real Estate Apl is runnning"});
-})
+app.get("/", (req, res) => {
+    res.json({
+        success: true,
+        message: "Real Estate API is running"
+    });
+});
 
 app.use("/api/properties", propertyRoutes);
-app.use("/api/buildings", buildingRoutes)
+app.use("/api/buildings", buildingRoutes);
 app.use("/api/floors", floorRoutes);
 app.use("/api/units", unitRoutes);
 app.use("/api/tenants", tenantRoutes);
@@ -48,6 +49,6 @@ app.use("/api/notifications", notificationRoutes);
 app.use("/api/invoices", invoiceRoutes);
 app.use("/api/users", userRoutes);
 
-app.use(errorHandler)
+app.use(errorHandler);
 
-module.exports = app;
+export default app;

@@ -1,5 +1,5 @@
-const Rent = require("../models/rentM.js");
-const ApiError = require("../apiError.js");
+import Rent from "../models/rentM.js";
+import ApiError from "../apiError.js";
 
 const getRents = async (req, res, next) => {
     try {
@@ -35,7 +35,12 @@ const createRent = async (req, res, next) => {
             dueDate
         } = req.body;
 
-        if (!contract || !month || !amount || !dueDate) {
+        if (
+            !contract ||
+            !month ||
+            amount === undefined ||
+            !dueDate
+        ) {
             throw new ApiError(
                 400,
                 "Contract, month, amount and due date are required"
@@ -59,7 +64,53 @@ const createRent = async (req, res, next) => {
     }
 };
 
-module.exports = {
+const updateRent = async (req, res, next) => {
+    try {
+        const rent = await Rent.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            {
+                new: true,
+                runValidators: true
+            }
+        );
+
+        if (!rent) {
+            throw new ApiError(404, "Rent not found");
+        }
+
+        res.json({
+            success: true,
+            message: "Rent updated successfully",
+            data: rent
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const deleteRent = async (req, res, next) => {
+    try {
+        const rent = await Rent.findByIdAndDelete(
+            req.params.id
+        );
+
+        if (!rent) {
+            throw new ApiError(404, "Rent not found");
+        }
+
+        res.json({
+            success: true,
+            message: "Rent deleted successfully"
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export {
     getRents,
-    createRent
+    createRent,
+    updateRent,
+    deleteRent
 };

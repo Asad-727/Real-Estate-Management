@@ -1,8 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const Schema = mongoose.Schema;
-
-const maintenanceSchema = new Schema(
+const maintenanceSchema = new mongoose.Schema(
     {
         unit: {
             type: mongoose.Schema.Types.ObjectId,
@@ -20,15 +18,15 @@ const maintenanceSchema = new Schema(
             required: true
         },
 
+        cost: {
+            type: Number,
+            default: 0
+        },
+
         status: {
             type: String,
             enum: ["pending", "in-progress", "completed"],
             default: "pending"
-        },
-
-        cost: {
-            type: Number,
-            default: 0
         }
     },
     {
@@ -36,6 +34,9 @@ const maintenanceSchema = new Schema(
     }
 );
 
-const Maintenance = mongoose.model("Maintenance", maintenanceSchema);
+const Maintenance = mongoose.model(
+    "Maintenance",
+    maintenanceSchema
+);
 
-module.exports = Maintenance;
+export default Maintenance;

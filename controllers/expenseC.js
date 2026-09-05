@@ -1,5 +1,5 @@
-const Expense = require("../models/expenseM.js");
-const ApiError = require("../apiError.js");
+import Expense from "../models/expenseM.js";
+import ApiError from "../apiError.js";
 
 const getExpenses = async (req, res, next) => {
     try {
@@ -23,7 +23,12 @@ const createExpense = async (req, res, next) => {
             date
         } = req.body;
 
-        if (!title || !description || !amount || !date) {
+        if (
+            !title ||
+            !description ||
+            amount === undefined ||
+            !date
+        ) {
             throw new ApiError(
                 400,
                 "Title, description, amount and date are required"
@@ -47,7 +52,53 @@ const createExpense = async (req, res, next) => {
     }
 };
 
-module.exports = {
+const updateExpense = async (req, res, next) => {
+    try {
+        const expense = await Expense.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            {
+                new: true,
+                runValidators: true
+            }
+        );
+
+        if (!expense) {
+            throw new ApiError(404, "Expense not found");
+        }
+
+        res.json({
+            success: true,
+            message: "Expense updated successfully",
+            data: expense
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const deleteExpense = async (req, res, next) => {
+    try {
+        const expense = await Expense.findByIdAndDelete(
+            req.params.id
+        );
+
+        if (!expense) {
+            throw new ApiError(404, "Expense not found");
+        }
+
+        res.json({
+            success: true,
+            message: "Expense deleted successfully"
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export {
     getExpenses,
-    createExpense
+    createExpense,
+    updateExpense,
+    deleteExpense
 };

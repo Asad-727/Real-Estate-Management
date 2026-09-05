@@ -1,7 +1,8 @@
-const User = require("../models/userM.js");
-const ApiError = require("../apiError.js");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
+import User from "../models/userM.js";
+import ApiError from "../apiError.js";
 
 const getUsers = async (req, res, next) => {
     try {
@@ -18,12 +19,7 @@ const getUsers = async (req, res, next) => {
 
 const createUser = async (req, res, next) => {
     try {
-        const {
-            name,
-            email,
-            password,
-            role
-        } = req.body;
+        const { name, email, password } = req.body;
 
         if (!name || !email || !password) {
             throw new ApiError(
@@ -32,13 +28,21 @@ const createUser = async (req, res, next) => {
             );
         }
 
+        const existingUser = await User.findOne({ email });
+
+        if (existingUser) {
+            throw new ApiError(
+                400,
+                "Email already exists"
+            );
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const user = await User.create({
             name,
             email,
-            password: hashedPassword,
-            role
+            password: hashedPassword
         });
 
         const userData = user.toObject();
@@ -69,7 +73,10 @@ const loginUser = async (req, res, next) => {
         const user = await User.findOne({ email });
 
         if (!user) {
-            throw new ApiError(401, "Invalid email or password");
+            throw new ApiError(
+                401,
+                "Invalid email or password"
+            );
         }
 
         const isMatch = await bcrypt.compare(
@@ -78,10 +85,12 @@ const loginUser = async (req, res, next) => {
         );
 
         if (!isMatch) {
-            throw new ApiError(401, "Invalid email or password");
+            throw new ApiError(
+                401,
+                "Invalid email or password"
+            );
         }
 
-        // JWT TOKEN
         const token = jwt.sign(
             {
                 id: user._id,
@@ -100,7 +109,7 @@ const loginUser = async (req, res, next) => {
         res.json({
             success: true,
             message: "Login successful",
-            token: token,
+            token,
             data: userData
         });
     } catch (error) {
@@ -108,8 +117,63 @@ const loginUser = async (req, res, next) => {
     }
 };
 
-module.exports = {
+const updateUser = async (req, res, next) => {
+    try {
+        const updateData = { ...req.body };
+
+        if (updateData.password) {
+            updateData.password = await bcrypt.hash(
+                updateData.password,
+                10
+            );
+        }
+
+        const user = await User.findByIdAndUpdate(
+            req.params.id,
+            updateData,
+            {
+                new: true,
+                runValidators: true
+            }
+        ).select("-password");
+
+        if (!user) {
+            throw new ApiError(404, "User not found");
+        }
+
+        res.json({
+            success: true,
+            message: "User updated successfully",
+            data: user
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const deleteUser = async (req, res, next) => {
+    try {
+        const user = await User.findByIdAndDelete(
+            req.params.id
+        );
+
+        if (!user) {
+            throw new ApiError(404, "User not found");
+        }
+
+        res.json({
+            success: true,
+            message: "User deleted successfully"
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export {
     getUsers,
     createUser,
-    loginUser
+    loginUser,
+    updateUser,
+    deleteUser
 };

@@ -1,23 +1,16 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const Schema = mongoose.Schema;
-
-const contractSchema = new Schema(
+const contractSchema = new mongoose.Schema(
     {
-        tenant: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Tenant",
-            required: true
-        },
-
         unit: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Unit",
             required: true
         },
 
-        monthlyRent: {
-            type: Number,
+        tenant: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Tenant",
             required: true
         },
 
@@ -29,6 +22,11 @@ const contractSchema = new Schema(
         endDate: {
             type: Date,
             required: true
+        },
+
+        monthlyRent: {
+            type: Number,
+            required: true
         }
     },
     {
@@ -38,4 +36,4 @@ const contractSchema = new Schema(
 
 const Contract = mongoose.model("Contract", contractSchema);
 
-module.exports = Contract;
+export default Contract;

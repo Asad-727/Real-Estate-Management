@@ -1,11 +1,11 @@
-const express = require("express");
+import express from "express";
 
-const {
-    createInvoice
-} = require("../controllers/invoiceC.js");
+import createInvoice from "../controllers/invoiceC.js";
+
+import authMiddleware from "../middleware/authM.js";
 
 const router = express.Router();
 
-router.get("/:paymentId", createInvoice);
+router.get("/:paymentId", authMiddleware, createInvoice);
 
-module.exports = router;
+export default router;

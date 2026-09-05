@@ -1,16 +1,19 @@
-const express = require("express");
+import express from "express";
 
-const {
+import {
     getProperties,
-    createProperty
-} = require("../controllers/propertyC.js");
+    createProperty,
+    updateProperty,
+    deleteProperty
+} from "../controllers/propertyC.js";
 
-const authMiddleware = require("../middleware/authM.js");
+import authMiddleware from "../middleware/authM.js";
 
 const router = express.Router();
 
 router.get("/", authMiddleware, getProperties);
-
 router.post("/", authMiddleware, createProperty);
+router.put("/:id", authMiddleware, updateProperty);
+router.delete("/:id", authMiddleware, deleteProperty);
 
-module.exports = router;
+export default router;

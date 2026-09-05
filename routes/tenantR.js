@@ -1,14 +1,19 @@
-const express = require("express");
+import express from "express";
 
-const {
+import {
     getTenants,
-    createTenant
-} = require("../controllers/tenantC.js");
+    createTenant,
+    updateTenant,
+    deleteTenant
+} from "../controllers/tenantC.js";
+
+import authMiddleware from "../middleware/authM.js";
 
 const router = express.Router();
 
-router.get("/", getTenants);
+router.get("/", authMiddleware, getTenants);
+router.post("/", authMiddleware, createTenant);
+router.put("/:id", authMiddleware, updateTenant);
+router.delete("/:id", authMiddleware, deleteTenant);
 
-router.post("/", createTenant);
-
-module.exports = router;
+export default router;

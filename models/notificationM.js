@@ -1,8 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const Schema = mongoose.Schema;
-
-const notificationSchema = new Schema(
+const notificationSchema = new mongoose.Schema(
     {
         title: {
             type: String,
@@ -16,13 +14,7 @@ const notificationSchema = new Schema(
 
         type: {
             type: String,
-            enum: ["rent", "payment", "maintenance", "general"],
-            default: "general"
-        },
-
-        read: {
-            type: Boolean,
-            default: false
+            required: true
         }
     },
     {
@@ -35,4 +27,4 @@ const Notification = mongoose.model(
     notificationSchema
 );
 
-module.exports = Notification;
+export default Notification;

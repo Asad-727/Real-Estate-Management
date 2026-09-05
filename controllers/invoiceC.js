@@ -1,6 +1,6 @@
-const PDFDocument = require("pdfkit");
-const Payment = require("../models/paymentM.js");
-const ApiError = require("../apiError.js");
+import PDFDocument from "pdfkit";
+import Payment from "../models/paymentM.js";
+import ApiError from "../apiError.js";
 
 const createInvoice = async (req, res, next) => {
     try {
@@ -15,6 +15,7 @@ const createInvoice = async (req, res, next) => {
         const doc = new PDFDocument();
 
         res.setHeader("Content-Type", "application/pdf");
+
         res.setHeader(
             "Content-Disposition",
             "attachment; filename=invoice.pdf"
@@ -23,6 +24,7 @@ const createInvoice = async (req, res, next) => {
         doc.pipe(res);
 
         doc.fontSize(20).text("Real Estate Invoice");
+
         doc.moveDown();
 
         doc.fontSize(12).text(`Payment ID: ${payment._id}`);
@@ -37,6 +39,4 @@ const createInvoice = async (req, res, next) => {
     }
 };
 
-module.exports = {
-    createInvoice
-};
+export default createInvoice;

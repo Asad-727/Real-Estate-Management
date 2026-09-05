@@ -1,14 +1,19 @@
-const express = require("express");
+import express from "express";
 
-const {
+import {
     getPayments,
-    createPayment
-} = require("../controllers/paymentC.js");
+    createPayment,
+    updatePayment,
+    deletePayment
+} from "../controllers/paymentC.js";
+
+import authMiddleware from "../middleware/authM.js";
 
 const router = express.Router();
 
-router.get("/", getPayments);
+router.get("/", authMiddleware, getPayments);
+router.post("/", authMiddleware, createPayment);
+router.put("/:id", authMiddleware, updatePayment);
+router.delete("/:id", authMiddleware, deletePayment);
 
-router.post("/", createPayment);
-
-module.exports = router;
+export default router;

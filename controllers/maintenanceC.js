@@ -1,5 +1,5 @@
-const Maintenance = require("../models/maintenanceM.js");
-const ApiError = require("../apiError.js");
+import Maintenance from "../models/maintenanceM.js";
+import ApiError from "../apiError.js";
 
 const getMaintenances = async (req, res, next) => {
     try {
@@ -39,7 +39,7 @@ const createMaintenance = async (req, res, next) => {
 
         res.status(201).json({
             success: true,
-            message: "Maintenance request created successfully",
+            message: "Maintenance created successfully",
             data: maintenance
         });
     } catch (error) {
@@ -47,7 +47,53 @@ const createMaintenance = async (req, res, next) => {
     }
 };
 
-module.exports = {
+const updateMaintenance = async (req, res, next) => {
+    try {
+        const maintenance = await Maintenance.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            {
+                new: true,
+                runValidators: true
+            }
+        );
+
+        if (!maintenance) {
+            throw new ApiError(404, "Maintenance not found");
+        }
+
+        res.json({
+            success: true,
+            message: "Maintenance updated successfully",
+            data: maintenance
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const deleteMaintenance = async (req, res, next) => {
+    try {
+        const maintenance = await Maintenance.findByIdAndDelete(
+            req.params.id
+        );
+
+        if (!maintenance) {
+            throw new ApiError(404, "Maintenance not found");
+        }
+
+        res.json({
+            success: true,
+            message: "Maintenance deleted successfully"
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export {
     getMaintenances,
-    createMaintenance
+    createMaintenance,
+    updateMaintenance,
+    deleteMaintenance
 };

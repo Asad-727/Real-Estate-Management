@@ -1,17 +1,31 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const Schema = mongoose.Schema;
-
-const unitSchema = new Schema(
+const unitSchema = new mongoose.Schema(
     {
-        name: {
+        floor: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Floor",
+            required: true
+        },
+
+        unitNumber: {
             type: String,
             required: true
         },
 
-        floor: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Floor",
+        type: {
+            type: String,
+            required: true
+        },
+
+        status: {
+            type: String,
+            enum: ["available", "occupied"],
+            default: "available"
+        },
+
+        rent: {
+            type: Number,
             required: true
         }
     },
@@ -22,4 +36,4 @@ const unitSchema = new Schema(
 
 const Unit = mongoose.model("Unit", unitSchema);
 
-module.exports = Unit;
+export default Unit;

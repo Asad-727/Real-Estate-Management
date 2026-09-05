@@ -1,5 +1,5 @@
-const Floor = require("../models/floorM.js");
-const ApiError = require("../ApiError.js");
+import Floor from "../models/floorM.js";
+import ApiError from "../apiError.js";
 
 const getFloors = async (req, res, next) => {
     try {
@@ -16,15 +16,19 @@ const getFloors = async (req, res, next) => {
 
 const createFloor = async (req, res, next) => {
     try {
-        const { name, building } = req.body;
+        const { building, floorNumber, name } = req.body;
 
-        if (!name || !building) {
-            throw new ApiError(400, "Name and building are required");
+        if (!building || floorNumber === undefined || !name) {
+            throw new ApiError(
+                400,
+                "Building, floor number and name are required"
+            );
         }
 
         const floor = await Floor.create({
-            name,
-            building
+            building,
+            floorNumber,
+            name
         });
 
         res.status(201).json({
@@ -37,7 +41,51 @@ const createFloor = async (req, res, next) => {
     }
 };
 
-module.exports = {
+const updateFloor = async (req, res, next) => {
+    try {
+        const floor = await Floor.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            {
+                new: true,
+                runValidators: true
+            }
+        );
+
+        if (!floor) {
+            throw new ApiError(404, "Floor not found");
+        }
+
+        res.json({
+            success: true,
+            message: "Floor updated successfully",
+            data: floor
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const deleteFloor = async (req, res, next) => {
+    try {
+        const floor = await Floor.findByIdAndDelete(req.params.id);
+
+        if (!floor) {
+            throw new ApiError(404, "Floor not found");
+        }
+
+        res.json({
+            success: true,
+            message: "Floor deleted successfully"
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export {
     getFloors,
-    createFloor
+    createFloor,
+    updateFloor,
+    deleteFloor
 };

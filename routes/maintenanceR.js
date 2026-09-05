@@ -1,14 +1,19 @@
-const express = require("express");
+import express from "express";
 
-const {
+import {
     getMaintenances,
-    createMaintenance
-} = require("../controllers/maintenanceC.js");
+    createMaintenance,
+    updateMaintenance,
+    deleteMaintenance
+} from "../controllers/maintenanceC.js";
+
+import authMiddleware from "../middleware/authM.js";
 
 const router = express.Router();
 
-router.get("/", getMaintenances);
+router.get("/", authMiddleware, getMaintenances);
+router.post("/", authMiddleware, createMaintenance);
+router.put("/:id", authMiddleware, updateMaintenance);
+router.delete("/:id", authMiddleware, deleteMaintenance);
 
-router.post("/", createMaintenance);
-
-module.exports = router;
+export default router;

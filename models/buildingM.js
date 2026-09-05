@@ -1,22 +1,23 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const Schema = mongoose.Schema;
+const buildingSchema = new mongoose.Schema(
+    {
+        name: {
+            type: String,
+            required: true
+        },
 
-const buildingSchema = new Schema({
-    name:{
-        type: String,
-        required: true
+        property: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Property",
+            required: true
+        }
     },
-    property:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Property",
-        required: true
-    },
-},
-{
-    timestamps: true
-});
+    {
+        timestamps: true
+    }
+);
 
 const Building = mongoose.model("Building", buildingSchema);
 
-module.exports = Building;
+export default Building;
